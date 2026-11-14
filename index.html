@@ -22,10 +22,10 @@ h1,h2,h3{font-family:Cairo,Tajawal,sans-serif;line-height:1.3;margin:0}
 .badge{display:inline-block;background:var(--sand);color:var(--ink);font-weight:800;border-radius:999px;padding:3px 14px;font-size:.85rem}
 .hero h1{font-size:clamp(1.6rem,5.5vw,2.6rem);margin:10px 0 4px}
 .hero p.sub{margin:0;opacity:.85}
-#globeBox{position:relative;height:min(78vw,430px);margin:6px auto 0;touch-action:pan-y;cursor:grab}
+#globeBox{position:relative;height:min(90vw,460px);margin:0 auto;border-radius:20px;overflow:hidden;touch-action:pan-y;cursor:grab}
 #globeBox .zoom{position:absolute;left:4px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:2}
 #globeBox .zoom button{width:46px;height:46px;border-radius:50%;border:1px solid #ffffff55;background:#0d3561cc;color:#fff;font-size:1.6rem;font-weight:800;line-height:1;backdrop-filter:blur(4px)}
-#globeBox canvas{display:block;width:100%!important;height:100%!important}
+#globeBox canvas{position:relative;z-index:1;display:block;width:100%!important;height:100%!important}
 .readout{background:#ffffff14;border:1px solid #ffffff2a;border-radius:16px;padding:12px 14px;margin:6px 0 10px;min-height:64px;backdrop-filter:blur(4px)}
 .readout b{color:var(--sand)}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -47,7 +47,7 @@ h1,h2,h3{font-family:Cairo,Tajawal,sans-serif;line-height:1.3;margin:0}
 .st small{color:var(--mut);line-height:1.4}
 .st .tag{position:absolute;top:10px;left:10px;font-size:.7rem;background:var(--sea);color:#fff;border-radius:6px;padding:1px 7px;font-weight:700}
 /* views */
-.view{display:none;padding-bottom:40px}
+.view{display:none}
 .view.on{display:block}
 .vhead{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--line);padding:10px 0}
 .vhead .wrap{display:flex;align-items:center;gap:10px}
@@ -111,215 +111,310 @@ footer .nm b{display:block;color:var(--sand);font-size:1.05rem}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes drop{0%{transform:translateY(-40px);opacity:0}20%{opacity:1}100%{transform:translateY(60px);opacity:0}}
 .drop{animation:drop .9s linear forwards}
+
+/* ===== dashboard & app layout ===== */
+html,body{height:100%}
+.view.on{display:flex;flex-direction:column;height:100dvh;min-height:100vh}
+.vhead{flex:0 0 auto;position:static}
+.vbody{flex:1;min-height:0;overflow:auto;padding:14px 0}
+.vbody .wrap,.vhead .wrap{max-width:1280px}
+.vbody .wrap.narrow{max-width:760px}
+.view .panel:first-child,.view .info:first-child{margin-top:0}
+.hide-sm{display:none}
+@media(min-width:900px){
+  .hide-sm{display:inline}
+  .split{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px;align-items:start;height:100%}
+  .split.wideA{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr)}
+  .split .colA{height:100%;display:flex;flex-direction:column;justify-content:center;min-height:0}
+  .split .colB{max-height:100%;overflow:auto;padding-left:4px}
+  .split .colB > :first-child{margin-top:0}
+  .vbody{overflow:hidden}
+  .view .mapbox svg{max-height:calc(100dvh - 120px);margin:auto}
+  .view .mapbox{display:flex;justify-content:center}
+  .cv3d{height:calc(100dvh - 120px)!important}
+  #globeBox{height:calc(100dvh - 120px)!important}
+  .tl{max-height:calc(100dvh - 150px);overflow:auto}
+  .tl .ev{margin:7px 0;padding:7px 12px}
+  #v-quiz .vbody,#v-weather .vbody{overflow:auto}
+}
+/* weather grid */
+.wxgrid{display:grid;grid-template-columns:1fr;gap:12px}
+.wxgrid .panel{margin:0}
+@media(min-width:900px){.wxgrid{grid-template-columns:repeat(3,1fr)}.wxgrid .panel{padding:12px 14px}.wxgrid .panel p.legend{font-size:.8rem;margin:6px 0 0}}
+@media(min-width:900px) and (max-height:820px){.wxgrid .tool svg{transform:scale(.8);margin:-12px}}
+/* dashboard */
+.dash{height:100%;display:flex;flex-direction:column;gap:12px;padding:14px clamp(12px,3vw,32px);background:radial-gradient(ellipse at 50% -20%,#1d5c9e 0%,var(--sea2) 55%,#081d36 100%);color:#fff}
+.dhead{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 20px}
+.dhead h1{font-size:clamp(1.25rem,3.2vw,2.2rem);margin:4px 0 0}
+.dnames{display:flex;gap:8px;flex-wrap:wrap;font-size:.85rem}
+.dnames span{background:#ffffff14;border:1px solid #ffffff26;border-radius:999px;padding:4px 12px}
+.dnames b{color:var(--sand)}
+.dgrid{flex:1;min-height:0;display:grid;grid-template-columns:1fr;gap:12px}
+.dcol{display:flex;flex-direction:column;min-height:0;background:#ffffff0d;border:1px solid #ffffff1f;border-radius:20px;padding:10px}
+.dlabel{font-family:Cairo,Tajawal;font-weight:800;font-size:1.05rem;margin:0 4px 8px;color:var(--sand)}
+.tiles{flex:1;min-height:0;display:grid;gap:10px;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr}
+.tile{border:0;border-radius:16px;background:#fff;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 6px;text-align:center;min-height:0;position:relative;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 14px #00000030}
+.tile:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 10px 24px #00000045}
+.tile .ic{font-size:clamp(1.6rem,4.5vh,2.8rem);line-height:1}
+.tile b{font-family:Cairo,Tajawal;font-size:clamp(.82rem,1.9vh,1.05rem);line-height:1.3}
+.tile small{display:block;color:var(--mut);font-size:.78rem;line-height:1.3}
+.tile .tag{position:absolute;top:7px;left:7px;font-size:.65rem;background:var(--sea);color:#fff;border-radius:6px;padding:0 6px;font-weight:800}
+.his .tile{background:#fff8e8}
+.tile.quiz{flex:0 0 auto;flex-direction:row;gap:14px;padding:12px 18px;background:linear-gradient(135deg,var(--sand),#f6d488);text-align:right}
+.tile.quiz small{color:var(--ink2)}
+@media(max-width:899px){.tile small{display:none}
+  .tiles{grid-template-columns:repeat(4,1fr);gap:7px}.dgrid{grid-template-rows:1fr 1fr;gap:10px}.dash{gap:10px;padding:12px}
+  .tile{padding:6px 3px;border-radius:12px}.tile b{font-size:.74rem}.tile .ic{font-size:1.7rem}.tile .tag{top:4px;left:4px;font-size:.58rem}
+  .dnames{font-size:.72rem;gap:6px}.dnames span{padding:2px 9px}.dcol{padding:8px}.dlabel{font-size:.95rem;margin-bottom:6px}}
+@media(min-width:900px){
+  .dgrid{grid-template-columns:4fr 3fr}
+  .geo .tiles{grid-template-columns:repeat(4,1fr)}
+  .his .tiles{grid-template-columns:repeat(3,1fr)}
+}
+/* dark globe view */
+.view.dark{background:radial-gradient(ellipse at 50% 0%,#1d5c9e 0%,var(--sea2) 55%,#081d36 100%);color:#fff}
+.view.dark .vhead{background:transparent;border-color:#ffffff22}
+.view.dark .hint{text-align:right;margin:0 0 8px}
+#globeBox .stars{position:absolute;inset:0;background-image:radial-gradient(1px 1px at 20% 30%,#fff8,transparent),radial-gradient(1px 1px at 70% 20%,#fff8,transparent),radial-gradient(1.5px 1.5px at 85% 60%,#fff6,transparent),radial-gradient(1px 1px at 10% 75%,#fff7,transparent),radial-gradient(1px 1px at 45% 85%,#fff5,transparent);pointer-events:none}
+.qopts{display:grid;grid-template-columns:1fr;gap:0 10px}
+@media(min-width:700px){.qopts{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 
-<!-- ============ HOME ============ -->
+<!-- ============ HOME (dashboard) ============ -->
 <section id="home" class="view on">
-  <div class="hero">
-    <div class="stars"></div>
-    <div class="wrap" style="position:relative">
-      <span class="badge">أسبوع الوعي الجغرافي 2026</span>
-      <h1>المعرض الافتراضي لأدوات الجغرافيا</h1>
-      <p class="sub">جولة تفاعلية بين أدوات الجغرافي، من الإسطرلاب إلى الأقمار الصناعية</p>
-      <div id="globeBox"><div class="zoom"><button id="zIn" aria-label="تكبير">+</button><button id="zOut" aria-label="تصغير">−</button></div></div>
-      <p class="hint">👆 اسحبي لتدوير الأرض، وكبّري بالإصبعين أو بزر +، ثم المسي المكان لمعرفة إحداثياته</p>
+  <div class="dash">
+    <header class="dhead">
+      <div class="dtitle">
+        <span class="badge">أسبوع الوعي الجغرافي 2026</span>
+        <h1>المعرض الافتراضي لأدوات الجغرافيا</h1>
+      </div>
+      <div class="dnames">
+        <span><b>أ. صفاء الشريقي</b> · معلمة جغرافيا</span>
+        <span><b>أ. منى المعشني</b> · معلمة تاريخ</span>
+      </div>
+    </header>
+    <div class="dgrid">
+      <div class="dcol geo"><div class="dlabel">🌍 محطات الجغرافيا</div><div class="tiles" id="stGeo"></div></div>
+      <div class="dcol his"><div class="dlabel">📜 محطات التاريخ</div><div class="tiles" id="stHis"></div></div>
+    </div>
+    <button class="tile quiz" data-go="quiz"><span class="ic">🏅</span><span><b>مسابقة المستكشفة</b><small>10 أسئلة متغيرة · شهادة PDF باسمك</small></span></button>
+  </div>
+</section>
+
+<!-- ============ GLOBE ============ -->
+<section id="v-globe" class="view dark">
+  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ الرئيسية</button><h2>🌍 الكرة الأرضية: خطوط الطول ودوائر العرض</h2></div></div>
+  <div class="vbody"><div class="wrap split">
+    <div class="colA">
+      <div id="globeBox"><div class="stars"></div><div class="zoom"><button id="zIn" aria-label="تكبير">+</button><button id="zOut" aria-label="تصغير">−</button></div></div>
+    </div>
+    <div class="colB">
+      <p class="hint">👆 اسحبي لتدوير الأرض، وكبّري بالإصبعين أو بعجلة الماوس أو بزر +، ثم المسي المكان لمعرفة إحداثياته</p>
       <div class="readout" id="readout">المسي أي نقطة على الكرة الأرضية… 🌍</div>
-      <div class="row" style="justify-content:center;margin-bottom:14px">
+      <div class="row">
         <button class="btn" id="chBtn">🎯 تحدي الإحداثيات</button>
         <button class="btn ghost" id="omanBtn">🇴🇲 اذهبي إلى عُمان</button>
         <button class="btn ghost" id="linesBtn">إظهار الخطوط المهمة</button>
       </div>
     </div>
-  </div>
-
-  <div class="wrap">
-    <div class="sec-title"><span style="font-size:1.6rem">🌍</span><div><h2>محطات الجغرافيا</h2><small class="legend">إشراف أ. صفاء الشريقي</small></div></div>
-    <div class="grid" id="stGeo"></div>
-    <div class="sec-title"><span style="font-size:1.6rem">📜</span><div><h2>محطات التاريخ</h2><small class="legend">إشراف أ. منى المعشني</small></div></div>
-    <div class="grid" id="stHis"></div>
-    <div class="sec-title"><span style="font-size:1.6rem">🏅</span><h2>الختام</h2></div>
-    <button class="st" data-go="quiz" style="width:100%;min-height:0;flex-direction:row;align-items:center;gap:14px;background:linear-gradient(135deg,#fff6df,#fff)"><span class="ic">🏅</span><div><h3>مسابقة المستكشفة</h3><small>10 أسئلة مختلفة في كل مرة (جغرافيا وتاريخ)، وشهادة PDF باسمك</small></div></button>
-  </div>
+  </div></div>
 </section>
 
 <!-- ============ CONTOUR 3D ============ -->
 <section id="v-contour" class="view">
-  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ رجوع</button><h2>⛰️ خطوط الكنتور</h2></div></div>
-  <div class="wrap">
-    <div class="info">خطوط الكنتور تصل بين النقاط المتساوية في الارتفاع. شاهدي كيف يتحول الجبل المجسّم إلى خريطة كنتور مسطحة!</div>
-    <div class="cv3d" id="terrainBox"></div>
-    <div class="panel">
-      <label><b>حوّلي الجبل إلى خريطة:</b></label>
-      <input type="range" id="flatR" min="0" max="100" value="0">
-      <div class="row" style="justify-content:space-between"><span class="legend">مجسّم ثلاثي الأبعاد</span><span class="legend">خريطة كنتور (من الأعلى)</span></div>
-      <div class="row" style="margin-top:8px"><button class="btn sm" id="flatBtn">▶️ شغّلي التحويل</button><span class="legend">الفاصل الكنتوري: 100 متر</span></div>
+  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ الرئيسية</button><h2>⛰️ خطوط الكنتور</h2></div></div>
+  <div class="vbody"><div class="wrap split">
+    <div class="colA"><div class="cv3d" id="terrainBox"></div></div>
+    <div class="colB">
+      <div class="info">خطوط الكنتور تصل بين النقاط المتساوية في الارتفاع. شاهدي كيف يتحول الجبل المجسّم إلى خريطة كنتور مسطحة!</div>
+      <div class="panel">
+        <label><b>حوّلي الجبل إلى خريطة:</b></label>
+        <input type="range" id="flatR" min="0" max="100" value="0">
+        <div class="row" style="justify-content:space-between"><span class="legend">مجسّم ثلاثي الأبعاد</span><span class="legend">خريطة كنتور (من الأعلى)</span></div>
+        <div class="row" style="margin-top:8px"><button class="btn sm" id="flatBtn">▶️ شغّلي التحويل</button><span class="legend">الفاصل الكنتوري: 100 متر</span></div>
+      </div>
+      <div class="panel">
+        <h3>🤔 أيّ المنحدرين أشدّ انحداراً؟</h3>
+        <p style="margin:0 0 8px">انظري إلى الحرفين <b>أ</b> و <b>ب</b> على الخريطة.</p>
+        <div class="row"><button class="btn line" data-slope="a">المنحدر أ</button><button class="btn line" data-slope="b">المنحدر ب</button></div>
+        <div class="fb" id="slopeFb"></div>
+      </div>
     </div>
-    <div class="panel">
-      <h3>🤔 سؤال: أيّ المنحدرين أشدّ انحداراً؟</h3>
-      <p style="margin:0 0 8px">انظري إلى الحرفين <b>أ</b> و <b>ب</b> على الخريطة.</p>
-      <div class="row"><button class="btn line" data-slope="a">المنحدر أ</button><button class="btn line" data-slope="b">المنحدر ب</button></div>
-      <div class="fb" id="slopeFb"></div>
-    </div>
-  </div>
+  </div></div>
 </section>
 
 <!-- ============ COMPASS ============ -->
 <section id="v-compass" class="view">
-  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ رجوع</button><h2>🧭 البوصلة والاتجاهات</h2><span class="score" id="cScore">0</span></div></div>
-  <div class="wrap">
-    <div class="info">البوصلة أداة تحدد الاتجاهات. إبرتها مغناطيسية تتجه دائماً نحو <b>الشمال المغناطيسي</b>. للاتجاهات 4 أصلية و4 فرعية.</div>
-    <div class="panel" style="text-align:center">
-      <h3 id="cQ">المسي اتجاه…</h3>
-      <svg id="compass" style="direction:ltr" viewBox="0 0 320 320" style="width:min(100%,360px)"></svg>
-      <div class="fb" id="cFb"></div>
-      <button class="btn" id="cNext">سؤال جديد</button>
+  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ الرئيسية</button><h2>🧭 البوصلة والاتجاهات</h2><span class="score" id="cScore">0</span></div></div>
+  <div class="vbody"><div class="wrap split">
+    <div class="colA">
+      <div class="panel" style="text-align:center;margin-top:0">
+        <h3 id="cQ">المسي اتجاه…</h3>
+        <svg id="compass" viewBox="0 0 320 320" style="direction:ltr;width:min(100%,360px);max-height:calc(100dvh - 260px)"></svg>
+        <div class="fb" id="cFb"></div>
+        <button class="btn" id="cNext">سؤال جديد</button>
+      </div>
     </div>
-    <div class="panel">
-      <h3>🧠 تحدي الخريطة</h3>
-      <p id="cMapQ" style="margin:0 0 8px"></p>
-      <div class="row" id="cMapOpts"></div>
-      <div class="fb" id="cMapFb"></div>
+    <div class="colB">
+      <div class="info">البوصلة أداة تحدد الاتجاهات. إبرتها مغناطيسية تتجه دائماً نحو <b>الشمال المغناطيسي</b>. للاتجاهات 4 أصلية و4 فرعية.</div>
+      <div class="panel">
+        <h3>🧠 تحدي الخريطة</h3>
+        <p id="cMapQ" style="margin:0 0 8px"></p>
+        <div class="row" id="cMapOpts"></div>
+        <div class="fb" id="cMapFb"></div>
+      </div>
     </div>
-  </div>
+  </div></div>
 </section>
 
 <!-- ============ WEATHER ============ -->
 <section id="v-weather" class="view">
-  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ رجوع</button><h2>🌦️ محطة الأرصاد الجوية</h2></div></div>
-  <div class="wrap">
-    <div class="info">في محطة الأرصاد أدوات يقيس بها الجغرافي عناصر المناخ. حرّكي كل أداة وشاهدي كيف تعمل.</div>
-    <div class="two" id="wx" style="--d:0"></div>
-  </div>
+  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ الرئيسية</button><h2>🌦️ محطة الأرصاد الجوية</h2><span class="legend hide-sm">حرّكي كل أداة وشاهدي كيف تعمل</span></div></div>
+  <div class="vbody"><div class="wrap">
+    <div class="wxgrid" id="wx"></div>
+  </div></div>
 </section>
 
 <!-- ============ SCALE ============ -->
 <section id="v-scale" class="view">
-  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ رجوع</button><h2>📏 مقياس الرسم</h2></div></div>
-  <div class="wrap">
-    <div class="info">مقياس الرسم هو النسبة بين المسافة على الخريطة والمسافة الحقيقية على الأرض. مقياس هذه الخريطة: <b>1 : 5,000,000</b>، أي كل <b>1 سم</b> على الخريطة المطبوعة = <b>50 كم</b> على الأرض.</div>
-    <div class="panel">
-      <h3>اختاري مدينتين على الخريطة</h3>
-      <div class="mapbox" id="scaleMap"></div>
-      <div id="scaleQ" style="margin-top:12px">المسي المدينة الأولى…</div>
-      <div class="fb" id="scaleFb"></div>
+  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ الرئيسية</button><h2>📏 مقياس الرسم</h2></div></div>
+  <div class="vbody"><div class="wrap split">
+    <div class="colA"><div class="mapbox" id="scaleMap"></div></div>
+    <div class="colB">
+      <div class="info">مقياس الرسم هو النسبة بين المسافة على الخريطة والمسافة الحقيقية. مقياس هذه الخريطة: <b>1 : 5,000,000</b>، أي كل <b>1 سم</b> على الخريطة المطبوعة = <b>50 كم</b> على الأرض.</div>
+      <div class="panel">
+        <h3>اختاري مدينتين على الخريطة</h3>
+        <div id="scaleQ">المسي المدينة الأولى…</div>
+        <div class="fb" id="scaleFb"></div>
+      </div>
     </div>
-  </div>
+  </div></div>
 </section>
 
 <!-- ============ GPS ============ -->
 <section id="v-gps" class="view">
-  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ رجوع</button><h2>🛰️ كيف يعمل GPS؟</h2></div></div>
-  <div class="wrap">
-    <div class="info">جهاز GPS في جوالك يستقبل إشارات من الأقمار الصناعية، ويحسب بُعده عن كل قمر. حيث تتقاطع الدوائر يكون موقعك! (في الواقع يحتاج الجهاز 4 أقمار على الأقل ليحسب الارتفاع والوقت بدقة.)</div>
-    <div class="panel">
-      <h3>🔎 أين يوجد الجهاز المفقود؟</h3>
-      <div class="row" style="margin-bottom:10px"><button class="btn sm" data-sat="0">📡 قمر 1</button><button class="btn sm" data-sat="1">📡 قمر 2</button><button class="btn sm" data-sat="2">📡 قمر 3</button><button class="btn line sm" id="gpsNew">جولة جديدة</button></div>
-      <div class="mapbox" id="gpsMap"></div>
-      <div class="fb" id="gpsFb">شغّلي الأقمار الثلاثة، ثم المسي المدينة التي تتقاطع عندها الدوائر.</div>
+  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ الرئيسية</button><h2>🛰️ كيف يعمل GPS؟</h2></div></div>
+  <div class="vbody"><div class="wrap split">
+    <div class="colA"><div class="mapbox" id="gpsMap"></div></div>
+    <div class="colB">
+      <div class="info">جهاز GPS يستقبل إشارات من الأقمار الصناعية، ويحسب بُعده عن كل قمر. حيث تتقاطع الدوائر يكون موقعك! (في الواقع يحتاج 4 أقمار على الأقل ليحسب الارتفاع والوقت بدقة.)</div>
+      <div class="panel">
+        <h3>🔎 أين يوجد الجهاز المفقود؟</h3>
+        <div class="row" style="margin-bottom:10px"><button class="btn sm" data-sat="0">📡 قمر 1</button><button class="btn sm" data-sat="1">📡 قمر 2</button><button class="btn sm" data-sat="2">📡 قمر 3</button><button class="btn line sm" id="gpsNew">جولة جديدة</button></div>
+        <div class="fb" id="gpsFb">شغّلي الأقمار الثلاثة، ثم المسي المدينة التي تتقاطع عندها الدوائر.</div>
+      </div>
     </div>
-  </div>
+  </div></div>
 </section>
 
 <!-- ============ GIS ============ -->
 <section id="v-gis" class="view">
-  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ رجوع</button><h2>🗂️ نظم المعلومات الجغرافية GIS</h2></div></div>
-  <div class="wrap">
-    <div class="info">نظم المعلومات الجغرافية (GIS) تضع المعلومات على شكل <b>طبقات</b> فوق بعضها. نشغّل الطبقات ونطفئها لنحلل العلاقة بينها. جرّبي!</div>
-    <div class="panel">
-      <div class="row" id="gisChk" style="margin-bottom:10px"></div>
-      <div class="mapbox" id="gisMap"></div>
-      <p class="legend" style="margin:8px 0 0">* الطبقات تقريبية لأغراض التوضيح.</p>
+  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ الرئيسية</button><h2>🗂️ نظم المعلومات الجغرافية GIS</h2></div></div>
+  <div class="vbody"><div class="wrap split">
+    <div class="colA"><div class="mapbox" id="gisMap"></div></div>
+    <div class="colB">
+      <div class="info">نظم المعلومات الجغرافية (GIS) تضع المعلومات على شكل <b>طبقات</b> فوق بعضها. نشغّل الطبقات ونطفئها لنحلل العلاقة بينها.</div>
+      <div class="panel">
+        <div class="row" id="gisChk"></div>
+        <p class="legend" style="margin:8px 0 0">* الطبقات تقريبية لأغراض التوضيح.</p>
+      </div>
       <div class="info" id="gisQ" style="background:#e6f0f9"></div>
     </div>
-  </div>
+  </div></div>
 </section>
 
-<!-- ============ HISTORY ============ -->
+<!-- ============ HISTORY (tools) ============ -->
 <section id="v-history" class="view">
-  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ رجوع</button><h2>📜 أدوات الجغرافيا عبر التاريخ</h2></div></div>
-  <div class="wrap">
-    <div class="info">من ألواح الطين إلى الأقمار الصناعية… المسي كل محطة لتعرفي أكثر.</div>
-    <div class="tl" id="tl"></div>
-    <div class="panel">
-      <h3>🧩 رتّبي الأحداث من الأقدم إلى الأحدث</h3>
-      <p class="legend" style="margin:0 0 8px">المسي الحدث الأقدم أولاً، ثم الذي يليه…</p>
-      <div class="ord" id="ord"></div>
-      <div class="fb" id="ordFb"></div>
-      <button class="btn line sm" id="ordReset">إعادة</button>
+  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ الرئيسية</button><h2>📜 أدوات الجغرافيا عبر التاريخ</h2></div></div>
+  <div class="vbody"><div class="wrap split">
+    <div class="colA"><p class="legend" style="margin:0">المسي كل محطة لتعرفي أكثر 👇</p><div class="tl" id="tl"></div></div>
+    <div class="colB">
+      <div class="panel">
+        <h3>🧩 رتّبي الأحداث من الأقدم إلى الأحدث</h3>
+        <p class="legend" style="margin:0 0 8px">المسي الحدث الأقدم أولاً، ثم الذي يليه…</p>
+        <div class="ord" id="ord"></div>
+        <div class="fb" id="ordFb"></div>
+        <button class="btn line sm" id="ordReset">إعادة</button>
+      </div>
     </div>
-  </div>
+  </div></div>
 </section>
 
 <!-- ============ OMAN HISTORY ============ -->
 <section id="v-omanhist" class="view">
-  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ رجوع</button><h2>🕰️ محطات من تاريخ عُمان</h2></div></div>
-  <div class="wrap">
-    <div class="info">لعُمان تاريخ عريق يمتد آلاف السنين. المسي كل محطة لتعرفي تفاصيلها.</div>
-    <div class="tl" id="ohTl"></div>
-    <div class="panel">
-      <h3>🧩 رتّبي الأحداث من الأقدم إلى الأحدث</h3>
-      <p class="legend" style="margin:0 0 8px">المسي الحدث الأقدم أولاً، ثم الذي يليه…</p>
-      <div class="ord" id="ohOrd"></div>
-      <div class="fb" id="ohFb"></div>
-      <button class="btn line sm" id="ohReset">ترتيب جديد</button>
+  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ الرئيسية</button><h2>🕰️ محطات من تاريخ عُمان</h2></div></div>
+  <div class="vbody"><div class="wrap split">
+    <div class="colA"><p class="legend" style="margin:0">المسي كل محطة لتعرفي تفاصيلها 👇</p><div class="tl" id="ohTl"></div></div>
+    <div class="colB">
+      <div class="panel">
+        <h3>🧩 رتّبي الأحداث من الأقدم إلى الأحدث</h3>
+        <p class="legend" style="margin:0 0 8px">المسي الحدث الأقدم أولاً، ثم الذي يليه…</p>
+        <div class="ord" id="ohOrd"></div>
+        <div class="fb" id="ohFb"></div>
+        <button class="btn line sm" id="ohReset">ترتيب جديد</button>
+      </div>
     </div>
-  </div>
+  </div></div>
 </section>
 
 <!-- ============ HERITAGE MAP ============ -->
 <section id="v-heritage" class="view">
-  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ رجوع</button><h2>🏰 خريطة التراث العُماني</h2><span class="score" id="hScore">0</span></div></div>
-  <div class="wrap">
-    <div class="info">التاريخ والجغرافيا لا ينفصلان: كل موقع أثري له مكان على الخريطة يفسّر قصته. المسي الأرقام لتكتشفي المواقع.</div>
-    <div class="panel">
-      <div class="mapbox" id="herMap"></div>
-      <div id="herCard" class="info" style="background:#e6f0f9;min-height:70px">المسي أي رقم على الخريطة 📍</div>
+  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ الرئيسية</button><h2>🏰 خريطة التراث العُماني</h2><span class="score" id="hScore">0</span></div></div>
+  <div class="vbody"><div class="wrap split">
+    <div class="colA"><div class="mapbox" id="herMap"></div></div>
+    <div class="colB">
+      <div class="info">التاريخ والجغرافيا لا ينفصلان: كل موقع أثري له مكان على الخريطة يفسّر قصته. المسي الأرقام لتكتشفي المواقع.</div>
+      <div id="herCard" class="info" style="background:#e6f0f9;min-height:90px">المسي أي رقم على الخريطة 📍</div>
+      <div class="panel">
+        <h3>🎯 تحدي: أين يقع؟</h3>
+        <p id="herQ" style="margin:0 0 6px"></p>
+        <div class="row"><button class="btn sm" id="herStart">ابدئي التحدي</button></div>
+        <div class="fb" id="herFb"></div>
+      </div>
     </div>
-    <div class="panel">
-      <h3>🎯 تحدي: أين يقع؟</h3>
-      <p id="herQ" style="margin:0 0 6px"></p>
-      <div class="row"><button class="btn sm" id="herStart">ابدئي التحدي</button></div>
-      <div class="fb" id="herFb"></div>
-    </div>
-  </div>
+  </div></div>
 </section>
 
 <!-- ============ VOYAGES ============ -->
 <section id="v-voyages" class="view">
-  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ رجوع</button><h2>⛵ رحلات بحرية عُمانية</h2></div></div>
-  <div class="wrap">
-    <div class="info">استفاد العُمانيون من موقع بلادهم على المحيط الهندي ومن الرياح الموسمية، فأبحروا إلى أبعد موانئ العالم. اختاري رحلة وشاهدي مسارها.</div>
-    <div class="row" id="voyBtns" style="margin:12px 0"></div>
-    <div class="mapbox" style="background:#164e8c" id="voyMap"></div>
-    <div class="panel" id="voyInfo"></div>
-  </div>
+  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ الرئيسية</button><h2>⛵ رحلات بحرية عُمانية</h2></div></div>
+  <div class="vbody"><div class="wrap split wideA">
+    <div class="colA"><div class="mapbox" style="background:#164e8c" id="voyMap"></div></div>
+    <div class="colB">
+      <div class="info">استفاد العُمانيون من موقع بلادهم على المحيط الهندي ومن الرياح الموسمية، فأبحروا إلى أبعد موانئ العالم. اختاري رحلة:</div>
+      <div class="row" id="voyBtns"></div>
+      <div class="panel" id="voyInfo"></div>
+    </div>
+  </div></div>
 </section>
 
 <!-- ============ IDRISI ============ -->
 <section id="v-idrisi" class="view">
-  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ رجوع</button><h2>🗺️ خريطة الإدريسي</h2></div></div>
-  <div class="wrap">
-    <div class="info">رسم الجغرافي العربي <b>الشريف الإدريسي</b> عام 1154م خريطة للعالم المعروف آنذاك، ووضع فيها <b>الجنوب في الأعلى</b> والشمال في الأسفل، كما كان شائعاً عند كثير من رسّامي الخرائط المسلمين.</div>
-    <div class="panel" style="text-align:center">
-      <div class="mapbox" style="background:#164e8c;overflow:hidden"><div id="idrWrap" style="transition:transform 1.6s cubic-bezier(.5,0,.3,1);position:relative"></div></div>
+  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ الرئيسية</button><h2>🗺️ خريطة الإدريسي</h2></div></div>
+  <div class="vbody"><div class="wrap split wideA">
+    <div class="colA">
+      <div class="mapbox" style="background:#164e8c;overflow:hidden"><div id="idrWrap" style="width:100%;transition:transform 1.6s cubic-bezier(.5,0,.3,1);position:relative"></div></div>
       <div class="row" style="justify-content:center;margin-top:12px"><button class="btn" id="idrBtn">🔄 اعرضيها كما رسمها الإدريسي</button></div>
-      <p id="idrTxt" class="legend" style="margin-top:8px"></p>
+      <p id="idrTxt" class="legend" style="margin-top:8px;text-align:center"></p>
     </div>
-    <div class="panel">
-      <h3>🤔 فكّري</h3>
-      <p style="margin:0 0 8px">عندما ننظر إلى خريطة الإدريسي (الجنوب في الأعلى)، في أي جهة من الصورة تظهر الجزيرة العربية بالنسبة لأوروبا؟</p>
-      <div class="row"><button class="btn line sm" data-idr="1">فوقها</button><button class="btn line sm" data-idr="0">تحتها</button><button class="btn line sm" data-idr="0">بجانبها مباشرة</button></div>
-      <div class="fb" id="idrFb"></div>
+    <div class="colB">
+      <div class="info">رسم الجغرافي العربي <b>الشريف الإدريسي</b> عام 1154م خريطة للعالم المعروف آنذاك، ووضع فيها <b>الجنوب في الأعلى</b> والشمال في الأسفل، كما كان شائعاً عند كثير من رسّامي الخرائط المسلمين.</div>
+      <div class="panel">
+        <h3>🤔 فكّري</h3>
+        <p style="margin:0 0 8px">في خريطة الإدريسي (الجنوب في الأعلى)، أين تظهر الجزيرة العربية بالنسبة لأوروبا؟</p>
+        <div class="row"><button class="btn line sm" data-idr="1">فوقها</button><button class="btn line sm" data-idr="0">تحتها</button><button class="btn line sm" data-idr="0">بجانبها مباشرة</button></div>
+        <div class="fb" id="idrFb"></div>
+      </div>
     </div>
-  </div>
+  </div></div>
 </section>
 
 <!-- ============ QUIZ ============ -->
 <section id="v-quiz" class="view">
-  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ رجوع</button><h2>🏅 مسابقة المستكشفة الجغرافية</h2></div></div>
-  <div class="wrap">
+  <div class="vhead"><div class="wrap"><button class="btn line sm" data-back>→ الرئيسية</button><h2>🏅 مسابقة المستكشفة الجغرافية</h2></div></div>
+  <div class="vbody"><div class="wrap narrow">
     <div class="panel" id="qStart">
       <h3>اكتبي اسمك لتحصلي على شهادتك</h3>
       <div class="row" style="margin-top:8px"><input class="numin" style="width:100%;max-width:320px;text-align:right" id="qName" placeholder="اسم الطالبة"><button class="btn" id="qGo">ابدئي المسابقة</button></div>
@@ -328,23 +423,13 @@ footer .nm b{display:block;color:var(--sand);font-size:1.05rem}
       <div class="row" style="justify-content:space-between"><b id="qNum"></b><span class="score" id="qSc"></span></div>
       <div class="prog"><i id="qProg"></i></div>
       <h3 id="qText"></h3>
-      <div id="qOpts"></div>
+      <div id="qOpts" class="qopts"></div>
       <div class="fb" id="qFb"></div>
       <button class="btn dark" id="qNext" style="display:none">التالي ←</button>
     </div>
     <div id="certBox" style="display:none"></div>
-  </div>
+  </div></div>
 </section>
-
-<footer>
-  <div class="wrap">
-    <div>أسبوع الوعي الجغرافي 2026 · المعرض الافتراضي لأدوات الجغرافيا</div>
-    <div class="names">
-      <div class="nm"><b>أ. صفاء الشريقي</b>معلمة جغرافيا</div>
-      <div class="nm"><b>أ. منى المعشني</b>معلمة تاريخ</div>
-    </div>
-  </div>
-</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -374,14 +459,11 @@ const ST=[
  {id:'idrisi',ic:'🗺️',t:'خريطة الإدريسي',d:'عندما كان الجنوب في الأعلى',h:1},
  {id:'quiz',ic:'🏅',t:'المسابقة',d:'',q:1}
 ];
-const card=s=>`<button class="st" data-go="${s.id}">${s.tag?`<span class="tag">${s.tag}</span>`:''}<span class="ic">${s.ic}</span><h3>${s.t}</h3><small>${s.d}</small></button>`;
+const card=s=>`<button class="tile" data-go="${s.id}">${s.tag?`<span class="tag">${s.tag}</span>`:''}<span class="ic">${s.ic}</span><b>${s.t}</b><small>${s.d}</small></button>`;
 $('#stGeo').innerHTML=ST.filter(s=>!s.h&&!s.q).map(card).join('');
 $('#stHis').innerHTML=ST.filter(s=>s.h).map(card).join('');
 const inits={};
-function show(id){
-  if(id==='globe'){go('home');window.scrollTo({top:0,behavior:'smooth'});return;}
-  go(id);
-}
+function show(id){go(id);}
 function go(id){
   $$('.view').forEach(v=>v.classList.remove('on'));
   const v=id==='home'?$('#home'):$('#v-'+id);v.classList.add('on');
@@ -389,7 +471,7 @@ function go(id){
   current=id;
   if(id!=='home'&&inits[id]&&!inits[id].done){inits[id].done=true;inits[id]();}
   if(id==='contour'&&terrain)terrain.resize();
-  if(id==='home'&&globe)globe.resize();
+  if(id==='globe'&&globe)globe.resize();
   try{history.replaceState(null,'',id==='home'?location.pathname:'#'+id);}catch(e){}
 }
 let current='home';
@@ -478,7 +560,7 @@ let globe=null;
   $('#linesBtn').onclick=()=>{lines.visible=!lines.visible;$('#linesBtn').textContent=lines.visible?'إخفاء الخطوط':'إظهار الخطوط المهمة';
     if(lines.visible)$('#readout').innerHTML='<span style="color:#ff6b6b">●</span> خط الاستواء (0°) وخط غرينتش (0°) · <span style="color:#ffc400">●</span> مدارا السرطان والجدي (23.5°) · <span style="color:#9ad8ff">●</span> الدائرتان القطبيتان (66.5°)';};
   let t0=performance.now();
-  function loop(t){requestAnimationFrame(loop);const dt=Math.min(.05,(t-t0)/1000);t0=t;if(current!=='home')return;
+  function loop(t){requestAnimationFrame(loop);const dt=Math.min(.05,(t-t0)/1000);t0=t;if(current!=='globe')return;
     if(auto)rotY+=dt*.15;
     cam.position.z+=(zT-cam.position.z)*Math.min(1,dt*6);const sc=Math.max(.15,zf());mk.scale.setScalar(sc);mk2.scale.setScalar(sc);
     if(tY!==null){rotY+=(tY-rotY)*Math.min(1,dt*4);rotX+=(tX-rotX)*Math.min(1,dt*4);if(Math.abs(tY-rotY)<.002)tY=null;}
@@ -960,7 +1042,7 @@ async function drawCert(name,score,total,level,p,date){
 }
 
 /* deep link */
-const h0=location.hash.slice(1);if(h0&&ST.some(s=>s.id===h0)&&h0!=='globe')go(h0);
+const h0=location.hash.slice(1);if(h0&&ST.some(s=>s.id===h0))go(h0);
 </script>
 </body>
 </html>
